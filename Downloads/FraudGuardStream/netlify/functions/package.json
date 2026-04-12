@@ -1,0 +1,13 @@
+{
+  "name": "instagram-clone-api",
+  "version": "1.0.0",
+  "description": "Instagram Clone API - Netlify Functions - Created by Phumeh",
+  "author": "Phumeh",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.41.0",
+    "jsonwebtoken": "^9.0.2",
+    "sequelize": "^6.35.0",
+    "sqlite3": "^5.1.6"
+  }
+}

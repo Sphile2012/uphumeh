@@ -1,0 +1,73 @@
+{
+  "name": "Booking",
+  "type": "object",
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "title": "Client Name"
+    },
+    "client_phone": {
+      "type": "string",
+      "title": "Phone Number"
+    },
+    "client_email": {
+      "type": "string",
+      "title": "Email"
+    },
+    "service_category": {
+      "type": "string",
+      "title": "Service Category",
+      "enum": [
+        "Acrylic Plain Nails",
+        "Frenchies",
+        "Nail Combos",
+        "Gel Nails",
+        "Design Add-on",
+        "Cluster Lashes",
+        "Individual Lashes",
+        "Lash Combos",
+        "Beginner Nail Course"
+      ]
+    },
+    "service_detail": {
+      "type": "string",
+      "title": "Service Detail"
+    },
+    "price": {
+      "type": "number",
+      "title": "Price (R)"
+    },
+    "preferred_date": {
+      "type": "string",
+      "title": "Preferred Date",
+      "format": "date"
+    },
+    "preferred_time": {
+      "type": "string",
+      "title": "Preferred Time"
+    },
+    "notes": {
+      "type": "string",
+      "title": "Special Requests"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "pending",
+        "confirmed",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "client_name",
+    "client_phone",
+    "service_category",
+    "service_detail",
+    "preferred_date",
+    "preferred_time"
+  ]
+}
