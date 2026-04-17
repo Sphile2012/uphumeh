@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
       merchant_key: merchantKey,
       return_url: `${appOrigin}/PaymentSuccess`,
       cancel_url: `${appOrigin}/Pricing`,
-      notify_url: `${appOrigin}/api/payfast-webhook`,
+      notify_url: `https://api.base44.com/api/apps/${Deno.env.get('BASE44_APP_ID')}/functions/payfastWebhook`,
 
       // Customer details
       name_first: user.full_name?.split(' ')[0] || 'Student',

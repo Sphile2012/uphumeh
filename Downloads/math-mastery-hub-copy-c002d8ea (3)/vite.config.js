@@ -1,9 +1,19 @@
+import base44Plugin from "@base44/vite-plugin"
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import path from 'path'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    base44Plugin({
+      legacySDKImports: process.env.BASE44_LEGACY_SDK_IMPORTS === 'true',
+      hmrNotifier: true,
+      navigationNotifier: true,
+      analyticsTracker: true,
+      visualEditAgent: true
+    }),
+    react(),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
