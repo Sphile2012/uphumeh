@@ -17,39 +17,28 @@ import Contact from './pages/Contact';
 import Admin from './pages/Admin';
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
+  const { authError } = useAuth();
 
-  // Show spinner only briefly — never block the app indefinitely
-  if (isLoadingPublicSettings && isLoadingAuth) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  // Never block guests — only block for user_not_registered
   if (authError?.type === 'user_not_registered') {
     return <UserNotRegisteredError />;
   }
 
-  // Render the main app — guests (unauthenticated) can browse and book freely
   return (
     <>
-    <ScrollToTop />
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/nail-course" element={<NailCourse />} />
-        <Route path="/book" element={<Book />} />
-        <Route path="/booking-confirmed" element={<BookingConfirmed />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="*" element={<PageNotFound />} />
-      </Route>
-    </Routes>
+      <ScrollToTop />
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/nail-course" element={<NailCourse />} />
+          <Route path="/book" element={<Book />} />
+          <Route path="/booking-confirmed" element={<BookingConfirmed />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Route>
+      </Routes>
     </>
   );
 };
