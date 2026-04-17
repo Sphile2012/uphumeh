@@ -19,8 +19,7 @@ import Admin from './pages/Admin';
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
 
-  // Only block rendering if BOTH loading states are active
-  // Use a timeout-safe approach: if still loading after mount, show spinner briefly
+  // Show spinner only briefly — never block the app indefinitely
   if (isLoadingPublicSettings && isLoadingAuth) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
@@ -29,7 +28,7 @@ const AuthenticatedApp = () => {
     );
   }
 
-  // Only block the whole app for user_not_registered — everything else lets guests through
+  // Never block guests — only block for user_not_registered
   if (authError?.type === 'user_not_registered') {
     return <UserNotRegisteredError />;
   }
