@@ -2,9 +2,8 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 import { createHash } from 'node:crypto';
 
 /**
- * PayFast requires the signature string to use application/x-www-form-urlencoded
- * encoding — spaces become '+', not '%20'. Using URLSearchParams gives us this
- * automatically and matches what PayFast's own generator produces.
+ * PayFast requires application/x-www-form-urlencoded encoding.
+ * URLSearchParams encodes spaces as '+' which matches PayFast's generator.
  */
 function buildSignatureString(data: Record<string, string>, passphrase: string): string {
   const params = new URLSearchParams();
@@ -29,7 +28,7 @@ Deno.serve(async (req) => {
     const { grade, tier, amount } = await req.json();
 
     if (!grade || !tier || !amount) {
-      return Response.json({ error: 'Missing required fields' }, { status: 400 });
+      return Response.json({ error: 'Missing required fields: grade, tier, amount' }, { status: 400 });
     }
 
     const merchantId = Deno.env.get('PAYFAST_MERCHANT_ID');
@@ -37,7 +36,7 @@ Deno.serve(async (req) => {
     const passphrase = Deno.env.get('PAYFAST_PASSPHRASE') || '';
 
     if (!merchantId || !merchantKey) {
-      return Response.json({ error: 'PayFast credentials not configured' }, { status: 500 });
+      return Response.json({ error: 'PayFast credentials not configured. Set PAYFAST_MERCHANT_ID and PAYFAST_MERCHANT_KEY.' }, { status: 500 });
     }
 
     const isSandbox = Deno.env.get('PAYFAST_SANDBOX') === 'true';
@@ -45,7 +44,19 @@ Deno.serve(async (req) => {
       ? 'https://sandbox.payfast.co.za/eng/process'
       : 'https://www.payfast.co.za/eng/process';
 
-    const appOrigin = Deno.env.get('APP_ORIGIN') || 'https://princemath.co.za';
+    const appOrigin = (Deno.env.get('APP_ORIGIN') || 'https://princemath.co.za').replace(/\/$/, '');
+    const appId = Deno.env.get('BASE44_APP_ID') || '';
+
+    // Split name safely — PayFast requires non-empty name_first and name_last
+    const nameParts = (user.full_name || 'Student User').trim().split(' ');
+    const nameFirst = nameParts[0] || 'Student';
+    const nameLast = nameParts.slice(1).join(' ') || 'User';
+
+    // Sanitize amount — strip any non-numeric characters except dot
+    const amountNum = parseFloat(String(amount).replace(/[^0-9.]/g, ''));
+    if (isNaN(amountNum) || amountNum <= 0) {
+      return Response.json({ error: 'Invalid amount' }, { status: 400 });
+    }
 
     // PayFast payment data — field ORDER matters for signature, do not change
     const paymentData: Record<string, string> = {
@@ -53,16 +64,16 @@ Deno.serve(async (req) => {
       merchant_key: merchantKey,
       return_url: `${appOrigin}/PaymentSuccess`,
       cancel_url: `${appOrigin}/Pricing`,
-      notify_url: `https://api.base44.com/api/apps/${Deno.env.get('BASE44_APP_ID')}/functions/payfastWebhook`,
+      notify_url: `https://api.base44.com/api/apps/${appId}/functions/payfastWebhook`,
 
       // Customer details
-      name_first: user.full_name?.split(' ')[0] || 'Student',
-      name_last: user.full_name?.split(' ').slice(1).join(' ') || 'User',
+      name_first: nameFirst,
+      name_last: nameLast,
       email_address: user.email,
 
       // Transaction details
       m_payment_id: `${user.id}_${Date.now()}`,
-      amount: parseFloat(amount).toFixed(2),
+      amount: amountNum.toFixed(2),
       item_name: `${grade} ${tier} Subscription`,
       item_description: `Monthly subscription for ${grade} Mathematics - ${tier} Plan`,
 
@@ -74,12 +85,12 @@ Deno.serve(async (req) => {
       // Subscription (recurring)
       subscription_type: '1',
       billing_date: new Date().toISOString().split('T')[0],
-      recurring_amount: parseFloat(amount).toFixed(2),
+      recurring_amount: amountNum.toFixed(2),
       frequency: '3',
       cycles: '0',
     };
 
-    // Build signature using URLSearchParams so spaces encode as '+' (PayFast standard)
+    // Build signature using URLSearchParams (spaces → '+', PayFast standard)
     const signatureString = buildSignatureString(paymentData, passphrase);
     const signature = createHash('md5').update(signatureString).digest('hex');
 
@@ -88,6 +99,7 @@ Deno.serve(async (req) => {
       paymentData: { ...paymentData, signature },
     });
   } catch (error) {
+    console.error('createPayFastPayment error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });

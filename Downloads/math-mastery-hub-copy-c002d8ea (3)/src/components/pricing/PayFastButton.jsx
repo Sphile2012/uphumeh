@@ -11,40 +11,54 @@ export default function PayFastButton({ grade, tier, price, highlighted, color }
     try {
       setLoading(true);
 
-      // Check if user is logged in
       const user = await base44.auth.me().catch(() => null);
       if (!user) {
         base44.auth.redirectToLogin(window.location.href);
         return;
       }
 
-      // Get payment URL and data
+      // Strip any non-numeric chars (handles 'R100', 'R 100', 'R150', etc.)
+      const amountNum = parseInt(String(price).replace(/[^0-9]/g, ''), 10);
+      if (!amountNum || amountNum <= 0) {
+        toast.error('Invalid price amount');
+        setLoading(false);
+        return;
+      }
+
       const response = await base44.functions.invoke('createPayFastPayment', {
         grade,
         tier,
-        amount: parseInt(price.replace('R', '')),
+        amount: amountNum,
       });
 
-      // Handle both { data: { paymentUrl, paymentData } } and { paymentUrl, paymentData }
-      const { paymentUrl, paymentData } = response.data || response;
+      // Handle both { paymentUrl, paymentData } and { data: { paymentUrl, paymentData } }
+      const result = response?.data || response;
+      const { paymentUrl, paymentData } = result;
 
-      // Create form and submit to PayFast
+      if (!paymentUrl || !paymentData) {
+        throw new Error('Invalid payment response from server');
+      }
+
+      // Build and submit form to PayFast
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = paymentUrl;
+      form.style.display = 'none';
 
-      Object.keys(paymentData).forEach(key => {
+      Object.entries(paymentData).forEach(([key, value]) => {
         const input = document.createElement('input');
         input.type = 'hidden';
         input.name = key;
-        input.value = paymentData[key];
+        input.value = String(value);
         form.appendChild(input);
       });
 
       document.body.appendChild(form);
       form.submit();
+      // Note: don't remove form — browser needs it during redirect
     } catch (error) {
-      toast.error('Payment failed: ' + error.message);
+      console.error('Payment error:', error);
+      toast.error('Payment failed: ' + (error.message || 'Please try again'));
       setLoading(false);
     }
   };
