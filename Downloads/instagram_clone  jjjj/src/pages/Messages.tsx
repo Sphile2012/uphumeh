@@ -67,7 +67,7 @@ export default function Messages() {
           {/* Sidebar Header */}
           <div className="p-5 flex items-center justify-between">
             <div className="flex items-center gap-2 cursor-pointer">
-              <h1 className="text-xl font-bold tracking-tight">alex_codes</h1>
+              <h1 className="text-xl font-bold tracking-tight">phume_codes</h1>
               <ChevronLeft className="w-4 h-4 rotate-270" />
             </div>
             <button className="p-2 hover:bg-secondary rounded-full transition-colors">

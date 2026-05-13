@@ -27,8 +27,8 @@ const INITIAL_RECENT_SEARCHES: RecentSearch[] = [
   {
     id: 'r1',
     type: 'users',
-    title: 'sarah_lens',
-    subtitle: 'Sarah Jenkins',
+    title: 'phume_lens',
+    subtitle: 'Phume Studio',
     imageUrl: 'https://images.unsplash.com/photo-1661265117335-4f2bb4cd966e?w=150',
   },
   {

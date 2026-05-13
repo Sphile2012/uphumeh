@@ -205,10 +205,10 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     variant="ghost"
                     onClick={() => {
                       setFormData({
-                        email: 'john@example.com',
+                        email: 'phume@example.com',
                         password: 'password123',
-                        username: 'john_doe',
-                        fullName: 'John Doe'
+                        username: 'phume_user',
+                        fullName: 'Phume User'
                       })
                     }}
                     className="w-full text-sm text-muted-foreground"
