@@ -1,196 +1,99 @@
-# Phume - Deployment Guide
+# Twitter Clone Deployment Guide
 
-## ✅ Build Status
+**Cloned by Phumeh**
 
-The application builds successfully and is ready for deployment!
+## Prerequisites
 
-## 🚀 Quick Deploy
+- Node.js 18+ installed
+- Supabase account
+- Netlify account
+- Git repository
 
-### Option 1: Vercel (Recommended)
+## Setup Instructions
 
-1. Push your code to GitHub
-2. Go to [vercel.com](https://vercel.com)
-3. Click "New Project"
-4. Import your GitHub repository
-5. Vercel will auto-detect Vite configuration
-6. Add environment variables (optional):
-   ```
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-7. Click "Deploy"
+### 1. Supabase Setup
 
-### Option 2: Netlify
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Go to SQL Editor and run the schema from `supabase/schema.sql`
+3. Go to Settings > API to get your project URL and anon key
+4. Enable Email Auth in Authentication > Settings
 
-1. Push your code to GitHub
-2. Go to [netlify.com](https://netlify.com)
-3. Click "Add new site" → "Import an existing project"
-4. Connect to GitHub and select your repository
-5. Build settings:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-6. Add environment variables (optional):
-   ```
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-7. Click "Deploy site"
+### 2. Environment Variables
 
-### Option 3: GitHub Pages
-
-1. Install gh-pages:
-   ```bash
-   npm install --save-dev gh-pages
-   ```
-
-2. Add to package.json:
-   ```json
-   "scripts": {
-     "predeploy": "npm run build",
-     "deploy": "gh-pages -d dist"
-   }
-   ```
-
-3. Update vite.config.ts:
-   ```typescript
-   export default defineConfig({
-     base: '/your-repo-name/',
-     // ... rest of config
-   })
-   ```
-
-4. Deploy:
-   ```bash
-   npm run deploy
-   ```
-
-## 🔧 Environment Variables
-
-The app works in **demo mode** without Supabase configuration. To enable full functionality:
-
-### Required for Production:
+1. Copy `.env.example` to `.env`
+2. Fill in your Supabase credentials:
 ```env
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-### Optional:
-```env
-VITE_ENABLE_ROUTE_MESSAGING=true
-```
-
-## 📦 Build Locally
+### 3. Local Development
 
 ```bash
 # Install dependencies
 npm install
 
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
+# Start development server
+npm run dev
 ```
 
-## 🎯 Features
+### 4. Netlify Deployment
 
-### ✅ Working Features (Demo Mode):
-- Full UI/UX with Instagram-like interface
-- Mock data for posts, stories, and users
-- Like, save, and comment interactions (in-memory)
-- Responsive design (mobile & desktop)
-- Smooth animations and transitions
-- Error boundary for graceful error handling
-- Loading states
+#### Option A: Git Integration (Recommended)
+1. Push your code to GitHub/GitLab
+2. Connect your repository to Netlify
+3. Set build settings:
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+4. Add environment variables in Netlify dashboard
+5. Deploy!
 
-### 🔌 Supabase Integration (When Configured):
-- Real user authentication
-- Database-backed posts and stories
-- Real-time messaging
-- Persistent likes and follows
-- User profiles
-- File storage for media
-
-## 🐛 Troubleshooting
-
-### Blank Page After Deployment
-
-1. **Check browser console** for errors
-2. **Verify environment variables** are set correctly
-3. **Check base URL** in vite.config.ts matches your deployment path
-4. **Clear browser cache** and hard refresh (Ctrl+Shift+R)
-
-### Build Errors
-
+#### Option B: Manual Deploy
 ```bash
-# Clear node_modules and reinstall
-rm -rf node_modules package-lock.json
-npm install
-
-# Clear Vite cache
-rm -rf node_modules/.vite
+# Build the project
 npm run build
+
+# Install Netlify CLI
+npm install -g netlify-cli
+
+# Deploy to Netlify
+netlify deploy --prod --dir=dist
 ```
 
-### Supabase Connection Issues
+### 5. Post-Deployment
 
-The app will automatically fall back to demo mode if Supabase is not configured. Check:
-1. Environment variables are correctly set
-2. Supabase project is active
-3. API keys are valid
-4. Database migrations have been run
+1. Update Supabase Auth settings:
+   - Add your Netlify domain to allowed origins
+   - Set redirect URLs for auth
+2. Test all features:
+   - User registration/login
+   - Tweet posting
+   - Real-time updates
+   - Responsive design
 
-## 📱 Testing Deployment
+## Features Included
 
-After deployment, test these features:
-- [ ] Home page loads
-- [ ] Navigation works
-- [ ] Posts display correctly
-- [ ] Stories carousel works
-- [ ] Like/save interactions work
-- [ ] Mobile responsive design
-- [ ] Error pages display correctly
+- ✅ User authentication (Supabase Auth)
+- ✅ Tweet CRUD operations
+- ✅ Like/Unlike functionality
+- ✅ Follow/Unfollow system
+- ✅ Real-time updates
+- ✅ Direct messaging
+- ✅ Responsive design
+- ✅ Dark/Light mode
+- ✅ Netlify deployment ready
 
-## 🔐 Security Notes
+## Tech Stack
 
-- Never commit `.env.local` or `.env` files
-- Use environment variables for all sensitive data
-- Supabase RLS policies are configured for security
-- API keys should be kept secret
+- **Frontend**: React 18, TypeScript, Vite
+- **UI**: shadcn/ui, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL, Auth, Real-time)
+- **State**: TanStack Query, Zustand
+- **Deployment**: Netlify
 
-## 📊 Performance
+## Support
 
-Current build size:
-- CSS: ~110 KB (gzipped: ~17 KB)
-- JS: ~806 KB (gzipped: ~242 KB)
-
-Consider code splitting for better performance:
-```typescript
-// Use dynamic imports for routes
-const Home = lazy(() => import('@/pages/Home'))
-```
-
-## 🎨 Customization
-
-### Branding
-- Logo: Update in `src/components/Layout.tsx`
-- Favicon: Replace `public/instagram-favicon.png`
-- Colors: Modify `src/index.css` theme variables
-- Footer: Update in `src/components/Layout.tsx`
-
-### Features
-- Add new pages in `src/pages/`
-- Add routes in `src/App.tsx`
-- Extend API in `src/api/`
-
-## 📞 Support
-
-If you encounter issues:
-1. Check the browser console for errors
-2. Review the error boundary message
-3. Check network tab for failed requests
-4. Verify environment variables
+For issues or questions, check the repository documentation or create an issue.
 
 ---
-
-**Built by Phumeh** • Instagram Clone with React, TypeScript, Vite, and Supabase
+**Twitter Clone - Cloned by Phumeh**

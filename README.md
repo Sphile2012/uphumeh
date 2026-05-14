@@ -1,63 +1,71 @@
-# Phume - Instagram Clone
+# Twitter Clone
 
-Instagram clone built by Phumeh using modern web technologies.
+A modern Twitter clone built with React, TypeScript, Supabase, and Tailwind CSS.
 
-## Tech Stack
+**Cloned by Phumeh**
 
-This project uses the following technologies:
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-- Supabase (Backend & Database)
+## 🚀 Quick Start
+
+**The app is built and ready!** Just needs 5 minutes of Supabase setup.
+
+👉 **See [QUICKSTART.md](QUICKSTART.md) for setup instructions**
 
 ## Features
 
-- User authentication
-- Photo/video sharing
-- Stories
-- Real-time messaging
-- Explore feed
-- Reels
-- User profiles
-- Follow/unfollow system
+- 🐦 Tweet posting and interactions
+- 👤 User profiles and authentication  
+- 🔔 Real-time notifications
+- 💬 Direct messaging
+- 🔍 Explore and trending content
+- 📱 Fully responsive design
+- 🌙 Dark/Light mode support
 
-## Backend & Database
+## Tech Stack
 
-This project uses Supabase for:
-- User authentication
-- PostgreSQL database
-- Real-time subscriptions
-- File storage
-- Edge functions
-
-## Development Workflow
-
-1. Adjust theme styles in src/index.css and tailwind.config.ts based on requirements
-2. Plan and create required pages based on user needs
-3. Organize page functionality and create corresponding folders under pages with Index.tsx entry files
-4. Configure routes in App.tsx, importing the Index.tsx entry files
-5. For simple requirements, implement directly in Index.tsx
-6. For complex requirements, split pages into components with this structure:
-    - Index.tsx (entry point)
-    - /components/ (components)
-    - /hooks/ (custom hooks)
-    - /stores/ (zustand stores for complex state management)
-7. After completing requirements, run pnpm i to install dependencies and use npm run lint & npx tsc --noEmit -p tsconfig.app.json --strict to check and fix issues
-
-## Backend API Integration
-- When adding new APIs or Supabase operations, create corresponding API files in src/api and export data types (reference src/demo.ts)
-- For Supabase implementations, ensure proper type safety
-- Frontend and Supabase implementations must strictly follow defined data types to avoid modifications
-- If type changes are needed, check all files referencing those types
+- **Frontend**: React 18, TypeScript, Vite
+- **UI Components**: shadcn/ui, Tailwind CSS
+- **Backend**: Supabase (Database, Auth, Real-time)
+- **State Management**: Zustand, TanStack Query
+- **Deployment**: Netlify
 
 ## Getting Started
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Set up Supabase project and configure environment variables
-4. Run development server: `npm run dev`
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Set up Supabase (see QUICKSTART.md)
+
+# 3. Create .env file with your Supabase credentials
+VITE_SUPABASE_URL=your_url
+VITE_SUPABASE_ANON_KEY=your_key
+
+# 4. Build
+npm run build
+
+# 5. Preview
+npm run preview
+```
+
+## Documentation
+
+- **[QUICKSTART.md](QUICKSTART.md)** - 5-minute setup guide
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Detailed deployment instructions
+- **[SETUP_STATUS.md](SETUP_STATUS.md)** - Current status & checklist
+
+## Deployment
+
+This project is configured for Netlify deployment with automatic builds from your Git repository.
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for full instructions.
+
+## Development
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run lint` - Run ESLint
+- `npm run preview` - Preview production build
 
 ---
-*Cloned by Phumeh*
+
+**Cloned by Phumeh** | Built with ❤️ using React, TypeScript, and Supabase
